@@ -1,0 +1,68 @@
+// src/components/TodoList.tsx
+import React from 'react';
+import type { Task } from '../types/taskType';
+import TodoCard from './TodoCard';
+
+interface TaskListProps {
+  todos: Task[];
+  editingId: number | null;
+  editTitle: string;
+  setEditTitle: (title: string) => void;
+  editDescription: string;
+  setEditDescription: (description: string) => void;
+  selectedTodoId: number | null;
+  toggleComplete: (id: number) => void;
+  startEditing: (id: number, title: string, description: string) => void;
+  saveEdit: () => void;
+  cancelEdit: () => void;
+  openDeleteDialog: (id: number) => void;
+  selectTodo: (id: number) => void;
+  formatDate: (date: Date) => string;
+}
+
+const TaskList: React.FC<TaskListProps> = ({
+  todos,
+  editingId,
+  editTitle,
+  setEditTitle,
+  editDescription,
+  setEditDescription,
+  selectedTodoId,
+  toggleComplete,
+  startEditing,
+  saveEdit,
+  cancelEdit,
+  openDeleteDialog,
+  selectTodo,
+  formatDate,
+}) => {
+  return (
+    <div className="space-y-2 my-5">
+      {todos.length === 0 ? (
+        <p className="text-center text-muted-foreground py-8">Aucune tâche pour le moment. Ajoutez-en une !</p>
+      ) : (
+        todos.map((todo) => (
+          <TodoCard
+            key={todo.id}
+            todo={todo}
+            editingId={editingId}
+            editTitle={editTitle}
+            setEditTitle={setEditTitle}
+            editDescription={editDescription}
+            setEditDescription={setEditDescription}
+            selectedTodoId={selectedTodoId}
+            toggleComplete={toggleComplete}
+            startEditing={startEditing}
+            saveEdit={saveEdit}
+            cancelEdit={cancelEdit}
+            openDeleteDialog={openDeleteDialog}
+            selectTodo={selectTodo}
+            formatDate={formatDate}
+          />
+        ))
+      )}
+    </div>
+  );
+};
+
+export default TaskList;
