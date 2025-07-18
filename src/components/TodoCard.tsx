@@ -48,9 +48,9 @@ const TodoCard: React.FC<TodoItemProps> = ({
     <div
       onClick={() => selectTodo(todo.id)}
       className={`flex items-center gap-3 p-3 rounded-lg border hover:shadow-md transition-colors cursor-pointer ${
-        selectedTodoId === todo.id
+        selectedTodoId === todo?.id
           ? "shadow-sm"
-          : todo.completed
+          : todo?.status === "DONE"
           ? "bg-slate-300 border"
           : "bg-blue-100 hover:border-slate-300"
       }`}
@@ -62,12 +62,12 @@ const TodoCard: React.FC<TodoItemProps> = ({
           toggleComplete(todo.id);
         }}
         className={`w-5 h-5 rounded border-2 cursor-pointer flex items-center justify-center transition-colors ${
-          todo.completed
+          todo.status === "DONE"
             ? "bg-blue-500 border-blue-500 text-white"
             : "border-muted hover:border-blue-500"
         }`}
       >
-        {todo.completed && <FaCheckSquare className="w-4 h-4" />}
+        {todo.status === "DONE" && <FaCheckSquare className="w-4 h-4" />}
       </button>
 
       {/* Texte de la todo / Formulaire d'édition */}
@@ -93,18 +93,18 @@ const TodoCard: React.FC<TodoItemProps> = ({
         ) : (
           <div className="flex-1">
             <div
-              className={`font-medium ${todo.completed ? "line-through text-muted-foreground" : "text-foreground"}`}
+              className={`font-medium ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-foreground"}`}
             >
               {todo.title}
             </div>
             {todo.description && (
               <div
-                className={`text-sm mt-1 ${todo.completed ? "line-through text-muted-foreground" : "text-muted-foreground"}`}
+                className={`text-sm mt-1 ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-muted-foreground"}`}
               >
                 {todo.description}
               </div>
             )}
-            <div className="text-xs text-muted-foreground mt-1">Créé le {formatDate(todo.createdAt)}</div>
+            <div className="text-xs text-muted-foreground mt-1">Créé le {formatDate(todo?.createdAt)}</div>
           </div>
         )}
       </div>
@@ -128,7 +128,7 @@ const TodoCard: React.FC<TodoItemProps> = ({
                 e.stopPropagation();
                 startEditing(todo.id, todo.title, todo.description);
               }}
-              disabled={todo.completed}
+              disabled={todo.status === "DONE"}
             >
               <FaEdit className='disabled:text-gray-400 w-5 h-5 transition-colors text-blue-600 hover:text-blue-500 cursor-pointer'/>
             </button>

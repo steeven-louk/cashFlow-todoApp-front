@@ -36,14 +36,17 @@ const TaskList: React.FC<TaskListProps> = ({
   selectTodo,
   formatDate,
 }) => {
+  console.log("TaskList rendered with todos:", todos);
   return (
     <div className="space-y-2 my-5">
-      {todos.length === 0 ? (
-        <p className="text-center text-muted-foreground py-8">Aucune tâche pour le moment. Ajoutez-en une !</p>
+      {todos?.length === 0 ? (
+        <p className="text-center text-muted-foreground py-8">
+         Aucune tâche pour le moment. Ajoutez-en une !
+        </p>
       ) : (
-        todos.map((todo) => (
+        todos.map((todo:Task) => (
           <TodoCard
-            key={todo.id}
+            key={todo?.id}
             todo={todo}
             editingId={editingId}
             editTitle={editTitle}
@@ -65,4 +68,6 @@ const TaskList: React.FC<TaskListProps> = ({
   );
 };
 
-export default TaskList;
+export default React.memo(TaskList);
+// This component renders a list of tasks (todos) and handles their display and interactions.
+// It uses React.memo to optimize rendering by preventing unnecessary re-renders when props haven't changed.

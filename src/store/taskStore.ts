@@ -32,7 +32,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour ajouter une nouvelle tâche
-  addTask: async (task: Task) => {
+  addTask: async (task:Omit<Task,'id'>) => {
     try {
       set({ isLoading: true, error: null });
       const newTask = await addTaskService(task);
@@ -47,14 +47,17 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour supprimer une tâche
-  deleteTask: async (id: string) => {
+  deleteTask: async (id: number) => {
     try {
       set({ isLoading: true, error: null });
       await deleteTaskService(id);
       // Filtrage des tâches pour retirer celle supprimée
       set((state) => ({
-        tasks: state.tasks.filter(task => task.id !== parseInt(id)),
+        tasks: state.tasks.filter(task => task.id !== id),
         isLoading: false
+    //     tasks: Array.isArray(state.tasks)
+    // ? state.tasks.filter(task => task.id !== id)
+    // : [],
       }));
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
@@ -62,13 +65,13 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour mettre à jour une tâche
-  updateTask: async (id: string, task: Task) => {
+  updateTask: async (id: number, task: Task) => {
     try {
       set({ isLoading: true, error: null });
       const updatedTask = await updateTaskService(id, task);
       // Mise à jour de la tâche dans le tableau
       set((state) => ({
-        tasks: state.tasks.map(t => t.id === parseInt(id) ? updatedTask : t),
+        tasks: state.tasks.map(t => t.id === id ? updatedTask : t),
         isLoading: false
       }));
     } catch (error) {
@@ -77,13 +80,13 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour mettre à jour le statut d'une tâche
-  updateTaskStatus: async (id: string, status: string) => {
+  updateTaskStatus: async (id: number, status: string) => {
     try {
       set({ isLoading: true, error: null });
       const updatedTask = await updateTaskStatusService(id, status);
       // Mise à jour du statut de la tâche dans le tableau
       set((state) => ({
-        tasks: state.tasks.map(t => t.id === parseInt(id) ? updatedTask : t),
+        tasks: state.tasks.map(t => t.id === id ? updatedTask : t),
         isLoading: false
       }));
     } catch (error) {

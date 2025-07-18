@@ -7,8 +7,8 @@ interface TodoStatsProps {
 }
 
 const TodoStats: React.FC<TodoStatsProps> = ({ todos }) => {
-  const completedCount = todos.filter((t) => t.status === 'done' as TaskStatus).length;
-  const remainingCount = todos.filter((t) => !t.status ==='done' as TaskStatus).length;
+  const completedCount = todos.filter((t) => t.status === "DONE" as TaskStatus).length;
+  const remainingCount = todos.filter((t) => t.status !== "DONE" as TaskStatus).length;
 
   return (
     <div className="flex justify-between text-sm text-muted-foreground pt-4 border-t mt-5">
