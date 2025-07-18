@@ -3,6 +3,7 @@ import React from 'react';
 import { FaCheckSquare, FaEdit, FaTrash } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
 import type { Task } from '../types/taskType';
+import { formatDate } from '../services/utils/formatedDate';
 
 interface TodoItemProps {
   todo: Task;
@@ -18,7 +19,6 @@ interface TodoItemProps {
   cancelEdit: () => void;
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
-  formatDate: (date: Date) => string;
   onClick: () => void;
 }
 
@@ -35,8 +35,6 @@ const TodoCard: React.FC<TodoItemProps> = ({
   saveEdit,
   cancelEdit,
   openDeleteDialog,
-  // selectTodo,
-  formatDate,
   onClick
 }) => {
 const cardClass = `
@@ -56,7 +54,7 @@ const checkBoxClass =`w-5 h-5 rounded border-2 cursor-pointer flex items-center 
         }`
 
 
-        return (
+return (
     <div onClick={()=> onClick()} className={cardClass}>
       {/* Checkbox */}
       {!editingId &&

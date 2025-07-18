@@ -36,9 +36,8 @@ const TaskList: React.FC<TaskListProps> = ({
   cancelEdit,
   openDeleteDialog,
   selectTodo,
-  formatDate,
 }) => {
-  console.log("TaskList rendered with todos:", todos);
+
   return (
     <div className="space-y-2 my-5">
       {todos?.length === 0 ? (
@@ -62,7 +61,6 @@ const TaskList: React.FC<TaskListProps> = ({
             cancelEdit={cancelEdit}
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
-            formatDate={formatDate}
             onClick={() => onTodoClick(todo.id)}
           />
         ))

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { Task } from '../../types/taskType';
 import { toast } from 'react-toastify';
+import { handleApiError } from '../utils/errrorHandler';
 
 const API_URL = 'http://localhost:3000/api/tasks';
 
@@ -16,28 +17,21 @@ export const fetchTasks = async () => {
         }
 
     } catch (error) {
-        toast.error(error?.response?.data.message || 'Erreur lors de la récupération des tâches',)
-        console.error(error?.response?.data.message || 'Erreur lors de la récupération des tâches');
-        // throw error;
+        handleApiError(error, 'Erreur lors de la récupération des tâches');
+        return[];
     }
 };
 
 export const getTask = async (id: number)=> {
     try {
         const response = await axios.get(`${API_URL}/${id}`);
-        console.log("Fetched task 15:", response);
         if(response.status === 200){
+            toast.success(response.data.message);
             const {data} = response.data;
-            console.log("Fetched task10:", data);
             return data;
         }
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error(error.response?.data.message || 'Erreur lors de la récupération de la tâche');
-        } else {
-            console.error('Erreur lors de la récupération de la tâche');
-        }
-        throw error;
+       throw handleApiError(error, 'Erreur lors de la récupération de la tâche');
     }
 };
 
@@ -55,8 +49,7 @@ export const addTask = async (task:Omit<Task,'id'|'createdAt'>) => {
         return data
     }
     } catch (error) {
-        console.log(error)
-        toast.error(error?.response?.data.message)
+       throw handleApiError(error, 'Erreur lors de l\'ajout de la tâche');
     }
 };
 
@@ -65,8 +58,7 @@ export const deleteTask = async (id:number) => {
       const response = await axios.delete(`${API_URL}/${id}`);
         toast.success(response.data.message)
     } catch (error) {
-        toast.error(error?.response?.data.message || 'Erreur lors de la suppression de la tâche');
-        console.error(error?.response?.data.message || 'Erreur lors de la suppression de la task');
+       throw handleApiError(error, 'Erreur lors de la suppression de la tâche');
     }
 };
 
@@ -80,9 +72,7 @@ export const updateTask = async (id:number, task:Task) => {
             return data;
         }
     } catch (error) {
-        toast.error(error?.response?.data.message || 'Erreur lors de la mise à jour de la tâche');
-        console.error(error?.response?.data.message || 'Erreur lors de la mise à jour de la tâche');
-        throw error;
+       throw handleApiError(error, 'Erreur lors de la mise à jour de la tâche');
     }
 };
 
@@ -95,10 +85,7 @@ export const updateTaskStatus = async (id:number, status:string) => {
             const {data} = response.data;
             return data;
         }
-        // return response.data;
     } catch (error) {
-        toast.error(error?.response?.data.message || 'Erreur lors de la mise à jour du statut de la tâche');
-        console.error(error?.response?.data.message || 'Erreur lors de la mise à jour du statut de la tâche');
-        throw error;
+       throw handleApiError(error, 'Erreur lors de la mise à jour du statut de la tâche');
     }
 };

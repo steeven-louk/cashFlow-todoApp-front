@@ -1,17 +1,16 @@
 import React from 'react';
 import { RxCross2 } from 'react-icons/rx';
 import type { Task } from '../types/taskType';
+import { formatDate } from '../services/utils/formatedDate';
 
 interface TodoDetailPanelProps {
   selectedTodo: Task | undefined; // Peut être undefined si non trouvé
   setSelectedTodoId: (id: number | null) => void;
-  formatDate: (date: Date) => string;
 }
 
 const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
   selectedTodo,
   setSelectedTodoId,
-  formatDate,
 }) => {
   if (!selectedTodo) return null; // Ne rien afficher si aucune tâche n'est sélectionnée ou trouvée
 

@@ -166,27 +166,27 @@ const toggleComplete = async (id: number) => {
 
 
 // Replace the existing formatDate function with this one:
-const formatDate = (dateString: string | Date) => {
-  try {
-    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+// const formatDate = (dateString: string | Date) => {
+//   try {
+//     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      return 'Date invalide';
-    }
+//     // Check if date is valid
+//     if (isNaN(date.getTime())) {
+//       return 'Date invalide';
+//     }
 
-    return new Intl.DateTimeFormat("fr-FR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Date invalide';
-  }
-};
+//     return new Intl.DateTimeFormat("fr-FR", {
+//       day: "2-digit",
+//       month: "2-digit",
+//       year: "numeric",
+//       hour: "2-digit",
+//       minute: "2-digit",
+//     }).format(date);
+//   } catch (error) {
+//     console.error('Error formatting date:', error);
+//     return 'Date invalide';
+//   }
+// };
   return (
     <>
     <div className="max-w-2xl border border-gray-400 w-full mx-auto p-6 flex-col my-auto justify-center border-md rounded-md">
@@ -222,7 +222,6 @@ const formatDate = (dateString: string | Date) => {
             cancelEdit={cancelEdit}
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
-            formatDate={formatDate}
             />
 
 
@@ -231,7 +230,6 @@ const formatDate = (dateString: string | Date) => {
   isOpen={isDetailModalOpen}
   onClose={handleCloseModal}
   selectedTodo={selectedTodo}
-  formatDate={formatDate}
   isLoading={isLoadingTodo}
   isError={isError}
 />
