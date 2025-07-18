@@ -39,7 +39,7 @@ export const getTask = async (id: number)=> {
 };
 
 
-export const addTask = async (task:Omit<Task,'id'>) => {
+export const addTask = async (task:Omit<Task,'id'|'createdAt'>) => {
     try {
     const response = await axios.post(API_URL, {
         title: task.title,

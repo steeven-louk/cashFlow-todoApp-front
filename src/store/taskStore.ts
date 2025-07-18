@@ -48,7 +48,7 @@ export const useTaskStore = create<TaskState>((set) => ({
 },
 
   // Fonction pour ajouter une nouvelle tâche
-  addTask: async (task:Omit<Task,'id'>) => {
+  addTask: async (task: Omit<Task, 'id' | 'createdAt'>) => {
     try {
       set({ error: null });
       const newTask = await addTaskService(task);
@@ -77,7 +77,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour mettre à jour une tâche
-  updateTask: async (id: number, task: Task) => {
+  updateTask: async (id: number, task: Omit<Task,'createdAt'>) => {
     try {
       set({ isLoading: true, error: null });
       const updatedTask = await updateTaskService(id, task);
@@ -94,15 +94,14 @@ export const useTaskStore = create<TaskState>((set) => ({
   // Fonction pour mettre à jour le statut d'une tâche
   updateTaskStatus: async (id: number, status: string) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ error: null });
       const updatedTask = await updateTaskStatusService(id, status);
       // Mise à jour du statut de la tâche dans le tableau
       set((state) => ({
         tasks: state.tasks.map(t => t.id === id ? updatedTask : t),
-        isLoading: false
       }));
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message });
     }
   }
 }));
