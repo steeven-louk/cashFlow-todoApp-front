@@ -7,7 +7,6 @@ export const todoSchema = z.object({
   description: z.string()
     .min(1, "La description est requise")
     .max(500, "La description ne doit pas dépasser 500 caractères")
-    .optional()
 });
 
 export type TodoFormData = z.infer<typeof todoSchema>;

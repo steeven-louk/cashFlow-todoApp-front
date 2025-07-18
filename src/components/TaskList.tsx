@@ -1,4 +1,3 @@
-// src/components/TodoList.tsx
 import React from 'react';
 import type { Task } from '../types/taskType';
 import TodoCard from './TodoCard';
@@ -18,7 +17,6 @@ interface TaskListProps {
   cancelEdit: () => void;
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
-  formatDate: (date: Date) => string;
 }
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -70,5 +68,3 @@ const TaskList: React.FC<TaskListProps> = ({
 };
 
 export default React.memo(TaskList);
-// This component renders a list of tasks (todos) and handles their display and interactions.
-// It uses React.memo to optimize rendering by preventing unnecessary re-renders when props haven't changed.

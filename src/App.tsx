@@ -1,20 +1,16 @@
-import { useEffect, useState } from 'react'
-import { IoAlertCircleOutline } from 'react-icons/io5'
-
 import TaskList from './components/TaskList'
 import TodoForm from './components/TodoForm'
-// import TodoDetailPanel from './components/TodoDetailPanel'
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog'
 import TodoStats from './components/TaskStats'
-import { useTaskStore } from './store/taskStore'
 import type { TodoFormData } from './schemas/taskSchema'
-import { useQuery } from '@tanstack/react-query'
 import TodoDetailModal from './components/TodoDetailModal'
 import { FaPenNib } from 'react-icons/fa'
+import { useTasks } from './hooks/useTasks'
+import { useState } from 'react'
+import { sortedTask } from './services/utils/sortedTask'
 
 
 function App() {
-  const {tasks,fetchTasks,getTask,updateTask,updateTaskStatus, addTask, deleteTask, isLoading, error} = useTaskStore();
 
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editTitle, setEditTitle] = useState("")
@@ -24,60 +20,67 @@ function App() {
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState<boolean>(false);
 
+    const {
+    tasks,
+    isLoading,
+    error,
+    addTask,
+    updateStatus,
+    updateTask,
+    deleteTask,
+  } = useTasks();
 
+  // Utilisation de TanStack Query pour récupérer les détails d'une tâche
+const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useTasks().useTask(selectedTodoId);
+
+  // Fonction pour ajouter une tâche
+  // Utilisation de TanStack Query pour ajouter une tâche
 const addTodo = async (data: TodoFormData) => { 
 
   try {
-      await addTask({
-        title: data.title.trim(),
-        description: data.description?.trim() || '',
-        status: 'PENDING'
-      });
+      await addTask(data);
     } catch (error) {
       console.error("Erreur lors de l'ajout de la tâche:", error);
     }
 };
 
-  // Utilisation de TanStack Query pour récupérer les détails d'une tâche
-const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useQuery({
-    queryKey: ['task', selectedTodoId],
-    queryFn:async () =>{
-      try{
-         const data =await getTask(selectedTodoId as number )
-        return data
-      }catch(err){
-        console.log(err)
-      }
-    },
-    enabled: !!selectedTodoId,
-    retry: false,
-});
-// const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useQuery({
-//     queryKey: ['task', selectedTodoId],
-//     queryFn: async () => {
-//       if (!selectedTodoId) {
-//         throw new Error('No task ID provided');
-//       }
-      
-//       try {
-//         const data = await getTask(selectedTodoId);
-//         if (!data) {
-//           throw new Error('Task not found');
-//         }
-//         return data; 
-//       } catch (error) {
-//         console.error('Error fetching task:', error);
-//         throw error; // Re-throw the error for proper error handling
-//       }
-//     },
-//     enabled: !!selectedTodoId,
-//     retry: false,
-// }
-// )
-// ;
-console.log("Selected Todo:", selectedTodo);
-console.log("Selected Todo ID:", selectedTodoId);
+  // Fonction pour basculer le statut d'une tâche
+const toggleComplete = async (id: number) => {
+    const todo = tasks.find(t => t.id === id);
+    if (!todo) return;
+    const newStatus = todo.status === 'DONE' ? 'PENDING' : 'DONE';
+    await updateStatus({id, status:newStatus});
+};
 
+  // Fonction pour sauvegarder les modifications d'une tâche en cours d'édition
+  const saveEdit = async() => {
+    if (editTitle.trim() !== "" && editingId !== null) {
+      const existingTask = tasks.find(t => t.id === editingId);
+      if (!existingTask) return;
+      await updateTask({
+        id: editingId,
+        task: {
+          id: editingId,
+          title: editTitle.trim(),
+          description: editDescription.trim(),
+          status: "PENDING",
+          createdAt: existingTask.createdAt
+        }
+      });
+      setEditingId(null)
+      setEditTitle("")
+      setEditDescription("")
+    }
+  }
+
+  // Fonction pour confirmer la suppression d'une tâche
+    const confirmDelete =async () => {
+    if (todoToDelete !== null) {
+      await deleteTask(todoToDelete)
+      setDeleteDialogOpen(false)
+      setTodoToDelete(null)
+    }
+  }
 
 
   const handleTodoClick = (id: number) => {
@@ -89,48 +92,20 @@ console.log("Selected Todo ID:", selectedTodoId);
     setSelectedTodoId(null);
   };
 
-  useEffect(()=>{
-    fetchTasks()
-  },[fetchTasks]);
-
-// fonction de tri par status et par date
-const sortedTasks = [...tasks].sort((a, b) => {
-  // D'abord, trier par statut (PENDING en haut, DONE en bas)
-  if (a.status === 'DONE' && b.status !== 'DONE') return 1;
-  if (a.status !== 'DONE' && b.status === 'DONE') return -1;
-
-  // Ensuite, trier par date (plus récent en haut)
-  const dateA = new Date(a.createdAt).getTime();
-  const dateB = new Date(b.createdAt).getTime();
-  return dateB - dateA;
-});
-
 
   const openDeleteDialog = (id: number) => {
     setTodoToDelete(id)
     setDeleteDialogOpen(true)
   }
 
-  const confirmDelete = () => {
-    if (todoToDelete !== null) {
-      console.log("todo delete",todoToDelete)
-      deleteTask(todoToDelete)
-      setDeleteDialogOpen(false)
-      setTodoToDelete(null)
-    }
-  }
+
 
   const cancelDelete = () => {
     setDeleteDialogOpen(false)
     setTodoToDelete(null)
   }
 
-const toggleComplete = async (id: number) => {
-    const todo = tasks.find(t => t.id === id);
-    if (!todo) return;
-    const newStatus = todo.status === 'DONE' ? 'PENDING' : 'DONE';
-    await updateTaskStatus(id, newStatus);
-};
+
 
   const startEditing = (id: number, title: string, description: string) => {
     setEditingId(id)
@@ -138,19 +113,7 @@ const toggleComplete = async (id: number) => {
     setEditDescription(description)
   }
 
-  const saveEdit = async() => {
-    if (editTitle.trim() !== "" && editingId !== null) {
-     await updateTask(editingId,{
-      id: editingId,
-      title: editTitle.trim(), 
-      description: editDescription.trim(), 
-      status: "PENDING"
-     })
-      setEditingId(null)
-      setEditTitle("")
-      setEditDescription("")
-    }
-  }
+
 
   const cancelEdit = () => {
     setEditingId(null)
@@ -162,31 +125,6 @@ const toggleComplete = async (id: number) => {
     setSelectedTodoId(selectedTodoId === id ? null : id)
   }
 
-
-
-
-// Replace the existing formatDate function with this one:
-// const formatDate = (dateString: string | Date) => {
-//   try {
-//     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-    
-//     // Check if date is valid
-//     if (isNaN(date.getTime())) {
-//       return 'Date invalide';
-//     }
-
-//     return new Intl.DateTimeFormat("fr-FR", {
-//       day: "2-digit",
-//       month: "2-digit",
-//       year: "numeric",
-//       hour: "2-digit",
-//       minute: "2-digit",
-//     }).format(date);
-//   } catch (error) {
-//     console.error('Error formatting date:', error);
-//     return 'Date invalide';
-//   }
-// };
   return (
     <>
     <div className="max-w-2xl border border-gray-400 w-full mx-auto p-6 flex-col my-auto justify-center border-md rounded-md">
@@ -208,7 +146,7 @@ const toggleComplete = async (id: number) => {
          { isLoading && <h2 className='text-xl animate-pulse'>Loading...</h2>}
          {error && <h2>Error: {error}</h2>}
           <TaskList
-            todos={sortedTasks}
+            todos={sortedTask(tasks)}
             onTodoClick={handleTodoClick}
             editingId={editingId}
             editTitle={editTitle}
@@ -226,15 +164,13 @@ const toggleComplete = async (id: number) => {
 
 
           {/* Panneau de détails de la todo sélectionnée */}
-<TodoDetailModal
-  isOpen={isDetailModalOpen}
-  onClose={handleCloseModal}
-  selectedTodo={selectedTodo}
-  isLoading={isLoadingTodo}
-  isError={isError}
-/>
-
-
+        <TodoDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={handleCloseModal}
+          selectedTodo={selectedTodo}
+          isLoading={isLoadingTodo}
+          isError={isError}
+        />
           {/* Statistiques */}
         {tasks?.length > 0 && <TodoStats todos={tasks} />}
       </div>
