@@ -34,15 +34,14 @@ export const useTaskStore = create<TaskState>((set) => ({
   // Fonction pour ajouter une nouvelle tâche
   addTask: async (task:Omit<Task,'id'>) => {
     try {
-      set({ isLoading: true, error: null });
+      set({ error: null });
       const newTask = await addTaskService(task);
       // Ajout de la nouvelle tâche au tableau existant
       set((state) => ({
         tasks: [...state.tasks, newTask],
-        isLoading: false
       }));
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message });
     }
   },
 

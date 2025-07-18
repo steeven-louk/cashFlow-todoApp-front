@@ -6,14 +6,13 @@ import TodoForm from './components/TodoForm'
 import TodoDetailPanel from './components/TodoDetailPanel'
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog'
 import TodoStats from './components/TaskStats'
-import type { Task } from './types/taskType'
+// import type { Task } from './types/taskType'
 import { useTaskStore } from './store/taskStore'
+import type { TodoFormData } from './schemas/taskSchema'
 
 function App() {
   const {tasks,fetchTasks,updateTask,updateTaskStatus, addTask, deleteTask, isLoading, error} = useTaskStore();
-  // const [todos, setTodos] = useState<Task | []>([])
-  const [newTitle, setNewTitle] = useState("")
-  const [newDescription, setNewDescription] = useState("")
+
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editTitle, setEditTitle] = useState("")
   const [editDescription, setEditDescription] = useState("")
@@ -22,19 +21,17 @@ function App() {
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null)
 console.log("tasttt", tasks)
 
-const addTodo = async () => {
-    if (!newTitle.trim() || !newDescription.trim()) return;
-    
-    const task: Omit<Task, 'id'> = {
-        // id: Date.now(), // temporaire si pas de backend
-        title: newTitle.trim(),
-        description: newDescription.trim(),
-        status: "PENDING",
-        // createdAt: new Date(),
-    };
-    await addTask(task);
-    setNewTitle("");
-    setNewDescription("");
+const addTodo = async (data: TodoFormData) => { 
+  console.log("Adding todo with data:", data);   
+    try {
+      await addTask({
+        title: data.title.trim(),
+        description: data.description?.trim() || '',
+        status: 'PENDING'
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la tâche:", error);
+    }
 };
 
   useEffect(()=>{
@@ -102,11 +99,7 @@ const toggleComplete = async (id: number) => {
     setSelectedTodoId(selectedTodoId === id ? null : id)
   }
 
-  // const handleKeyPress = (e: React.KeyboardEvent, action: () => void) => {
-  //   if (e.key === "Enter") {
-  //     action()
-  //   }
-  // }
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -133,10 +126,6 @@ const toggleComplete = async (id: number) => {
           <h2 className='font-semibold text-xl'>Nouvelle tâche</h2>
 
           <TodoForm 
-              newTitle={newTitle}
-              setNewTitle={setNewTitle}
-              newDescription={newDescription}
-              setNewDescription={setNewDescription}
               addTodo={addTodo}
           />
         </div>
