@@ -6,6 +6,7 @@ interface ErrorResponse {
   statusCode?: number;
 }
 
+// Function pour recuperer les erreurs API
 export const handleApiError = (
   error: unknown, 
   defaultMessage: string = 'Une erreur est survenue'
@@ -20,6 +21,7 @@ export const handleApiError = (
     };
   }
 
+  
   if (error instanceof Error) {
     toast.error(error.message);
     console.error('Application Error:', error.message);

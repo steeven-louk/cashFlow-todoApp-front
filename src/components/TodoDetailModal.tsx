@@ -1,6 +1,6 @@
-import React from 'react';
-import TodoDetailPanel from './TodoDetailPanel';
-import type { Task } from '../types/taskType';
+import React from "react";
+import TodoDetailPanel from "./TodoDetailPanel";
+import type { Task } from "../types/taskType";
 
 interface TodoDetailModalProps {
   isOpen: boolean;
@@ -19,7 +19,6 @@ const TodoDetailModal: React.FC<TodoDetailModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />

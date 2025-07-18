@@ -1,11 +1,11 @@
 // src/components/TodoItem.tsx
-import React from 'react';
-import { FaCheckSquare, FaEdit, FaTrash } from 'react-icons/fa';
-import { RxCross2 } from 'react-icons/rx';
-import type { Task } from '../types/taskType';
-import { formatDate } from '../services/utils/formatedDate';
-import { useTasks } from '../hooks/useTasks';
-import { useEditTodo } from '../hooks/useEditTodo';
+import React from "react";
+import { FaCheckSquare, FaEdit, FaTrash } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+import type { Task } from "../types/taskType";
+import { formatDate } from "../services/utils/formatedDate";
+import { useTasks } from "../hooks/useTasks";
+import { useEditTodo } from "../hooks/useEditTodo";
 
 interface TodoItemProps {
   todo: Task;
@@ -13,7 +13,7 @@ interface TodoItemProps {
   toggleComplete: (id: number) => void;
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
-  onClick: () => void;
+  onTodoClick: () => void;
 }
 
 const TodoCard: React.FC<TodoItemProps> = ({
@@ -21,91 +21,104 @@ const TodoCard: React.FC<TodoItemProps> = ({
   selectedTodoId,
   toggleComplete,
   openDeleteDialog,
-  onClick
+  onTodoClick,
 }) => {
+  const { updateTask } = useTasks();
+  // Hooks pour la gestion de l'édition
+  const {
+    editingId,
+    editTitle,
+    editDescription,
+    setEditTitle,
+    setEditDescription,
+    startEditing,
+    cancelEdit,
+    saveEdit,
+  } = useEditTodo(updateTask);
 
-   const {updateTask} = useTasks();
-      const {
-      editingId,
-      editTitle,
-      editDescription,
-      setEditTitle,
-      setEditDescription,
-      startEditing,
-      cancelEdit,
-      saveEdit
-      } = useEditTodo(updateTask);
-
-const cardClass = `
+  const cardClass = `
   flex items-center gap-3 p-3 rounded-lg border hover:shadow-md transition-colors cursor-pointer
-  ${selectedTodoId === todo.id 
-    ? "shadow-sm"
-    : todo.status === "DONE"
-    ? "bg-slate-300 border"
-    : "bg-blue-100 hover:border-slate-300"
+  ${
+    selectedTodoId === todo.id
+      ? "shadow-sm"
+      : todo.status === "DONE"
+      ? "bg-slate-300 border"
+      : "bg-blue-100 hover:border-slate-300"
   }
 `;
 
-const checkBoxClass =`w-5 h-5 rounded border-2 cursor-pointer flex items-center justify-center transition-colors ${
-          todo.status === "DONE"
-            ? "bg-blue-500 border-blue-500 text-white"
-            : "border-muted hover:border-blue-500"
-        }`
+  const checkBoxClass = `w-5 h-5 rounded border-2 cursor-pointer flex items-center justify-center transition-colors ${
+    todo.status === "DONE"
+      ? "bg-blue-500 border-blue-500 text-white"
+      : "border-muted hover:border-blue-500"
+  }`;
 
-
-return (
-    <div onClick={()=> onClick()} className={cardClass}>
+  return (
+    <div onClick={() => onTodoClick()} className={cardClass}>
       {/* Checkbox */}
-      {!editingId &&
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleComplete(todo.id);
-        }}
-        aria-label="Marquer comme terminée" 
-        aria-pressed={todo.status === "DONE"} 
-        className={checkBoxClass}
-      >
-        {todo.status === "DONE" && <FaCheckSquare className="w-4 h-4" />}
-      </button>
-    }
+      {!editingId && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleComplete(todo.id);
+          }}
+          aria-label="Marquer comme terminée"
+          aria-pressed={todo.status === "DONE"}
+          className={checkBoxClass}
+        >
+          {todo.status === "DONE" && <FaCheckSquare className="w-4 h-4" />}
+        </button>
+      )}
       {/* Texte de la todo / Formulaire d'édition */}
       <div className="flex-1">
         {editingId === todo.id ? (
-  <div className="flex-1 space-y-2" onClick={(e) => e.stopPropagation()}>
-    <input
-      type="text"
-      value={editTitle}
-      onChange={(e) => setEditTitle(e.target.value)}
-      className="font-medium p-1 border rounded w-full"
-      placeholder="Titre..."
-      autoFocus
-      onClick={(e) => e.stopPropagation()}
-    />
-    <textarea
-      value={editDescription}
-      onChange={(e) => setEditDescription(e.target.value)}
-      className="text-sm p-1 border rounded w-full"
-      rows={3}
-      placeholder="Description..."
-      onClick={(e) => e.stopPropagation()}
-    />
-  </div>
+          <div
+            className="flex-1 space-y-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              className="font-medium p-1 border rounded w-full"
+              placeholder="Titre..."
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+            <textarea
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+              className="text-sm p-1 border rounded w-full"
+              rows={3}
+              placeholder="Description..."
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
         ) : (
           <div className="flex-1">
             <div
-              className={`font-medium transition-color ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-foreground"}`}
+              className={`font-medium transition-color ${
+                todo.status === "DONE"
+                  ? "line-through text-muted-foreground"
+                  : "text-foreground"
+              }`}
             >
               {todo.title}
             </div>
             {todo.description && (
               <div
-                className={`text-sm mt-1 ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-muted-foreground"}`}
+                className={`text-sm mt-1 ${
+                  todo.status === "DONE"
+                    ? "line-through text-muted-foreground"
+                    : "text-muted-foreground"
+                }`}
               >
                 {todo.description}
               </div>
             )}
-            <div className="text-xs text-muted-foreground mt-1">Créé le {formatDate(todo?.createdAt)}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              Créé le {formatDate(todo?.createdAt)}
+            </div>
           </div>
         )}
       </div>
@@ -114,11 +127,21 @@ return (
       <div className="flex gap-2 z-40">
         {editingId === todo.id ? (
           <>
-            <button className='cursor-pointer' type="button" onClick={()=>saveEdit} disabled={!editTitle.trim()}>
-              <FaCheckSquare className='w-6 h-6 transition-colors text-green-600 hover:text-green-500 cursor-pointer disabled:text-gray-400'/>
+            <button
+              className="cursor-pointer"
+              type="button"
+            
+              onClick={(e) =>{e.stopPropagation();saveEdit()}}
+              disabled={!editTitle.trim()}
+            >
+              <FaCheckSquare className="w-6 h-6 transition-colors text-green-600 hover:text-green-500 cursor-pointer disabled:text-gray-400" />
             </button>
-            <button className='cursor-pointer' type="button" onClick={cancelEdit}>
-              <RxCross2 className='w-6 h-6 transition-colors text-red-600 hover:text-red-500 cursor-pointer'/>
+            <button
+              className="cursor-pointer"
+              type="button"
+              onClick={(e)=>{cancelEdit();e.stopPropagation()}}
+            >
+              <RxCross2 className="w-6 h-6 transition-colors text-red-600 hover:text-red-500 cursor-pointer" />
             </button>
           </>
         ) : (
@@ -131,7 +154,7 @@ return (
               }}
               disabled={todo.status === "DONE"}
             >
-              <FaEdit className=' w-6 h-6 transition-colors text-blue-600 hover:text-blue-500 cursor-pointer'/>
+              <FaEdit className=" w-6 h-6 transition-colors text-blue-600 hover:text-blue-500 cursor-pointer" />
             </button>
             <button
               type="button"
@@ -141,7 +164,7 @@ return (
               }}
               className="transition-colors text-red-400 hover:text-red-500 cursor-pointer"
             >
-              <FaTrash className='w-6 h-6'/>
+              <FaTrash className="w-6 h-6" />
             </button>
           </>
         )}

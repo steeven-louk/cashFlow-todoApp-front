@@ -5,10 +5,10 @@ import { handleApiError } from '../utils/errrorHandler';
 
 const API_URL = 'http://localhost:3000/api/tasks';
 
+// Fonction pour récupérer toutes les tâches
 export const fetchTasks = async () => {
     try {
         const response = await axios.get(API_URL);
-        console.log("Fetched tasks 1:", response.data);
         if(response.status === 200){
             toast.success(response.data.message);
             const {data} = response.data;
@@ -22,6 +22,7 @@ export const fetchTasks = async () => {
     }
 };
 
+// Fonction pour récupérer une tâche spécifique
 export const getTask = async (id: number)=> {
     try {
         const response = await axios.get(`${API_URL}/${id}`);
@@ -35,7 +36,7 @@ export const getTask = async (id: number)=> {
     }
 };
 
-
+// Fonction pour ajouter une tâche
 export const addTask = async (task:Omit<Task,'id'|'createdAt'>) => {
     try {
     const response = await axios.post(API_URL, {
@@ -65,7 +66,6 @@ export const deleteTask = async (id:number) => {
 export const updateTask = async (id:number, task:Task) => {
     try {
         const response = await axios.put(`${API_URL}/${id}`, task);
-        console.log("Updated task:", response);
         if(response.status === 200){
             toast.success(response.data.message);
             const {data} = response.data;
@@ -79,7 +79,6 @@ export const updateTask = async (id:number, task:Task) => {
 export const updateTaskStatus = async (id:number, status:string) => {
     try {
         const response = await axios.patch(`${API_URL}/${id}/complete`, { status });
-        // console.log("Updated task status:", response);
         if(response.status === 200){
             toast.success(response.data.message);
             const {data} = response.data;

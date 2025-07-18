@@ -7,7 +7,10 @@ interface TodoStatsProps {
 }
 
 const TodoStats: React.FC<TodoStatsProps> = ({ todos }) => {
+  // Nombre de tâches terminées et restantes
   const completedCount = todos.filter((t) => t.status === "DONE" as TaskStatus).length;
+  // Nombre de tâches restantes
+  // Ici, on considère les tâches restantes comme celles qui ne sont pas terminées
   const remainingCount = todos.filter((t) => t.status !== "DONE" as TaskStatus).length;
 
   return (

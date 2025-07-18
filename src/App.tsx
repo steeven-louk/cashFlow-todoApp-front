@@ -2,18 +2,18 @@ import TaskList from './components/TaskList'
 import TodoForm from './components/TodoForm'
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog'
 import TodoStats from './components/TaskStats'
-
 import TodoDetailModal from './components/TodoDetailModal'
+
 import { FaPenNib } from 'react-icons/fa'
-import { useTasks } from './hooks/useTasks'
 import { sortedTask } from './services/utils/sortedTask'
+
+import { useTasks } from './hooks/useTasks'
 import { useDeleteTodo } from './hooks/useDeleteTodo'
 import { useTaskDetail } from './hooks/useTaskDetail'
 import { useTodoActions } from './hooks/useTodoActions'
 
 
 function App() {
-
 
     const {
     tasks,
@@ -22,6 +22,7 @@ function App() {
     deleteTask,
   } = useTasks();
 
+  // Hook pour gérer la suppression d'une tâche
   const {   
     deleteDialogOpen,
     setDeleteDialogOpen,
@@ -29,7 +30,8 @@ function App() {
     cancelDelete,
     confirmDelete} = useDeleteTodo(deleteTask);
 
-    const { 
+  // Récupération des détails de la tâche sélectionnée
+  const { 
     selectedTodoId,
     isDetailModalOpen,
     handleTodoClick,
@@ -41,10 +43,6 @@ function App() {
   } = useTaskDetail();
 
   const { toggleComplete } = useTodoActions();
-
-
-  // Utilisation de TanStack Query pour récupérer les détails d'une tâche
-
 
   return (
     <>
@@ -59,13 +57,12 @@ function App() {
           {/* Formulaire d'ajout */}
           <h2 className='font-semibold text-xl'>Nouvelle tâche</h2>
 
-          <TodoForm 
-              // addTodo={addTodo}
-          />
+          <TodoForm/>
         </div>
+
           {/* Liste des todos */}
-         { isLoading && <h2 className='text-xl animate-pulse'>Loading...</h2>}
-         {error && <h2>Error: {error.message}</h2>}
+          { isLoading && <h2 className='text-xl animate-pulse'>Loading...</h2>}
+          {error && <h2>Error: {error.message}</h2>}
           <TaskList
             todos={sortedTask(tasks)}
             onTodoClick={handleTodoClick}
@@ -76,14 +73,14 @@ function App() {
             />
 
 
-          {/* Panneau de détails de la todo sélectionnée */}
-      <TodoDetailModal
-        isOpen={isDetailModalOpen}
-        onClose={handleCloseModal}
-        selectedTodo={selectedTodo}
-        isLoading={isLoadingTodo}
-        isError={isError}
-      />
+            {/* Panneau de détails de la todo sélectionnée */}
+          <TodoDetailModal
+            isOpen={isDetailModalOpen}
+            onClose={handleCloseModal}
+            selectedTodo={selectedTodo}
+            isLoading={isLoadingTodo}
+            isError={isError}
+          />
           {/* Statistiques */}
         {tasks?.length > 0 && <TodoStats todos={tasks} />}
       </div>

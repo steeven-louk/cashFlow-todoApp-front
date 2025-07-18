@@ -17,6 +17,6 @@ export interface TaskState {
   getTask: (id: number) => Promise<void>; // Fonction pour récupérer une tâche spécifique
   addTask: (task: Omit<Task, 'id' |  'createdAt'>) => Promise<void>;  // Fonction pour ajouter une tâche
   deleteTask: (id: number) => Promise<void>; // Fonction pour supprimer une tâche
-  updateTask: (id: number, task: Omit<Task, 'createdAt'>) => Promise<void>; // Fonction pour mettre à jour une tâche
+  updateTask: (id: number, task:Task) => Promise<void>; // Fonction pour mettre à jour une tâche
   updateTaskStatus: (id: number, status: string) => Promise<void>; // Fonction pour mettre à jour le statut
 }

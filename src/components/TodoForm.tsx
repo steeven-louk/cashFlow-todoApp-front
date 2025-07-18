@@ -4,13 +4,8 @@ import { todoSchema, type TodoFormData } from '../schemas/taskSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTodoActions } from '../hooks/useTodoActions';
 
-// interface TodoFormProps {
-//   addTodo: (data: TodoFormData) => void;
-
-// }
-
 const TodoForm: React.FC = () => {
-
+    // Utilisation de useForm pour gérer le formulaire
     const {
     register,
     handleSubmit,
@@ -23,13 +18,13 @@ const TodoForm: React.FC = () => {
       description: ''
     }
   });
-
+  // Récupération de la fonction addTodo depuis le hook useTodoActions
   const { addTodo } = useTodoActions()
 
 
   const onSubmit = async(data: TodoFormData) => {
     addTodo(data);
-    reset();
+    reset();// Réinitialise le formulaire après l'ajout
   };
 
   return (

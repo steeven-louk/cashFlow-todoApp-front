@@ -1,4 +1,3 @@
-// Import des dépendances nécessaires
 import { create } from "zustand";
 import type { Task, TaskState } from "../types/taskType";
 
@@ -77,7 +76,7 @@ export const useTaskStore = create<TaskState>((set) => ({
   },
 
   // Fonction pour mettre à jour une tâche
-  updateTask: async (id: number, task: Omit<Task,'createdAt'>) => {
+  updateTask: async (id: number, task:Task) => {
     try {
       set({ isLoading: true, error: null });
       const updatedTask = await updateTaskService(id, task);

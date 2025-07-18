@@ -12,7 +12,8 @@ const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
   selectedTodo,
   setSelectedTodoId,
 }) => {
-  if (!selectedTodo) return null; // Ne rien afficher si aucune tâche n'est sélectionnée ou trouvée
+  // Vérifie si selectedTodo est défini avant de continuer
+  if (!selectedTodo) return null;
 
   return (
     <div className="border border-gray-300 rounded-md p-4 mt-5">
@@ -23,6 +24,7 @@ const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
             <RxCross2 className='w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer'/>
           </button>
         </div>
+        
         <div className="space-y-3">
           <div>
             <label className="text-sm font-medium text-muted-foreground">Titre</label>

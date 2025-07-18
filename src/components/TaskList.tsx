@@ -37,7 +37,7 @@ const TaskList: React.FC<TaskListProps> = ({
             toggleComplete={toggleComplete}
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
-            onClick={() => onTodoClick(todo.id)}
+            onTodoClick={() => onTodoClick(todo.id)}
           />
         ))
       )}

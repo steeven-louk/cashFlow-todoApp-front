@@ -1,4 +1,3 @@
-// src/components/DeleteConfirmationDialog.tsx
 import React from 'react';
 
 interface DeleteConfirmationDialogProps {

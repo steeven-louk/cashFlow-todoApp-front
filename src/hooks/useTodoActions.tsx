@@ -17,6 +17,7 @@ export const useTodoActions = () => {
     }
   };
 
+  // Fonction pour basculer le statut d'une tâche entre 'DONE' et 'PENDING'
   const toggleComplete = async (id: number) => {
     const todo = tasks.find(t => t.id === id);
     if (!todo) return;

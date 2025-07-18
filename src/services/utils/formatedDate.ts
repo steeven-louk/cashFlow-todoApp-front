@@ -2,7 +2,6 @@ export const formatDate = (dateString: string | Date) => {
   try {
     const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     
-    // Check if date is valid
     if (isNaN(date.getTime())) {
       return 'Date invalide';
     }
