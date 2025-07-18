@@ -4,7 +4,8 @@ import type { Task } from '../types/taskType';
 import TodoCard from './TodoCard';
 
 interface TaskListProps {
-  todos: Task[];
+  todos:[];
+  onTodoClick: (id: number) => void;
   editingId: number | null;
   editTitle: string;
   setEditTitle: (title: string) => void;
@@ -22,6 +23,7 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({
   todos,
+  onTodoClick,
   editingId,
   editTitle,
   setEditTitle,
@@ -44,7 +46,7 @@ const TaskList: React.FC<TaskListProps> = ({
          Aucune tâche pour le moment. Ajoutez-en une !
         </p>
       ) : (
-        todos.map((todo:Task) => (
+        (todos || []).map((todo:Task) => (
           <TodoCard
             key={todo?.id}
             todo={todo}
@@ -61,6 +63,7 @@ const TaskList: React.FC<TaskListProps> = ({
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
             formatDate={formatDate}
+            onClick={() => onTodoClick(todo.id)}
           />
         ))
       )}

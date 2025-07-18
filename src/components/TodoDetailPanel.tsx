@@ -27,7 +27,7 @@ const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
         <div className="space-y-3">
           <div>
             <label className="text-sm font-medium text-muted-foreground">Titre</label>
-            <p className={`${selectedTodo.completed ? "line-through text-muted-foreground" : ""}`}>
+            <p className={`${selectedTodo.status ==="DONE" ? "line-through text-muted-foreground" : ""}`}>
               {selectedTodo.title}
             </p>
           </div>
@@ -36,7 +36,7 @@ const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
               <label className="text-sm font-medium text-muted-foreground">Description</label>
               <p
                 className={`text-sm ${
-                  selectedTodo.completed ? "line-through text-muted-foreground" : "text-muted-foreground"
+                  selectedTodo.status ==="DONE" ? "line-through text-muted-foreground" : "text-muted-foreground"
                 }`}
               >
                 {selectedTodo.description}
@@ -46,13 +46,13 @@ const TodoDetailPanel: React.FC<TodoDetailPanelProps> = ({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <label className="font-medium text-muted-foreground">Statut</label>
-              <p className={selectedTodo.completed ? "text-green-600" : "text-orange-600"}>
-                {selectedTodo.completed ? "✓ Terminée" : "⏳ En cours"}
+              <p className={selectedTodo.status ==="DONE" ? "text-green-600" : "text-orange-600"}>
+                {selectedTodo.status ==="DONE" ? "✓ Terminée" : "⏳ En cours"}
               </p>
             </div>
             <div>
               <label className="font-medium text-muted-foreground">Créée le</label>
-              <p>{formatDate(selectedTodo.createdAt)}</p>
+              <p>{formatDate(selectedTodo?.createdAt)}</p>
             </div>
           </div>
         </div>

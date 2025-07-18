@@ -19,6 +19,26 @@ export const fetchTasks = async () => {
     }
 };
 
+export const getTask = async (id: number)=> {
+    try {
+        const response = await axios.get(`${API_URL}/${id}`);
+        console.log("Fetched task 15:", response);
+        if(response.status === 200){
+            const {data} = response.data;
+            console.log("Fetched task10:", data);
+            return data;
+        }
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error(error.response?.data.message || 'Erreur lors de la récupération de la tâche');
+        } else {
+            console.error('Erreur lors de la récupération de la tâche');
+        }
+        throw error;
+    }
+};
+
+
 export const addTask = async (task:Omit<Task,'id'>) => {
     try {
     const response = await axios.post(API_URL, {

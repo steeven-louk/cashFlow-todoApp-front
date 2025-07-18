@@ -19,6 +19,7 @@ interface TodoItemProps {
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
   formatDate: (date: Date) => string;
+  onClick: () => void;
 }
 
 const TodoCard: React.FC<TodoItemProps> = ({
@@ -34,33 +35,30 @@ const TodoCard: React.FC<TodoItemProps> = ({
   saveEdit,
   cancelEdit,
   openDeleteDialog,
-  selectTodo,
+  // selectTodo,
   formatDate,
+  onClick
 }) => {
-  const handleKeyPress = (e: React.KeyboardEvent, action: () => void) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      action();
-    }
-  };
+const cardClass = `
+  flex items-center gap-3 p-3 rounded-lg border hover:shadow-md transition-colors cursor-pointer
+  ${selectedTodoId === todo.id 
+    ? "shadow-sm"
+    : todo.status === "DONE"
+    ? "bg-slate-300 border"
+    : "bg-blue-100 hover:border-slate-300"
+  }
+`;;
 
   return (
-    <div
-      onClick={() => selectTodo(todo.id)}
-      className={`flex items-center gap-3 p-3 rounded-lg border hover:shadow-md transition-colors cursor-pointer ${
-        selectedTodoId === todo?.id
-          ? "shadow-sm"
-          : todo?.status === "DONE"
-          ? "bg-slate-300 border"
-          : "bg-blue-100 hover:border-slate-300"
-      }`}
-    >
+    <div onClick={()=> onClick()} className={cardClass}>
       {/* Checkbox */}
       <button
         onClick={(e) => {
           e.stopPropagation();
           toggleComplete(todo.id);
         }}
+aria-label="Marquer comme terminée" aria-pressed={todo.status === "DONE"} 
+
         className={`w-5 h-5 rounded border-2 cursor-pointer flex items-center justify-center transition-colors ${
           todo.status === "DONE"
             ? "bg-blue-500 border-blue-500 text-white"
@@ -93,7 +91,7 @@ const TodoCard: React.FC<TodoItemProps> = ({
         ) : (
           <div className="flex-1">
             <div
-              className={`font-medium ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-foreground"}`}
+              className={`font-medium transition-color ${todo.status === "DONE" ? "line-through text-muted-foreground" : "text-foreground"}`}
             >
               {todo.title}
             </div>
@@ -149,4 +147,4 @@ const TodoCard: React.FC<TodoItemProps> = ({
   );
 };
 
-export default TodoCard;
+export default React.memo(TodoCard);

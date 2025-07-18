@@ -9,9 +9,12 @@ import TodoStats from './components/TaskStats'
 // import type { Task } from './types/taskType'
 import { useTaskStore } from './store/taskStore'
 import type { TodoFormData } from './schemas/taskSchema'
+import { useQuery } from '@tanstack/react-query'
+import TodoDetailModal from './components/TodoDetailModal'
+// import { getTask } from './services/API/taskService'
 
 function App() {
-  const {tasks,fetchTasks,updateTask,updateTaskStatus, addTask, deleteTask, isLoading, error} = useTaskStore();
+  const {tasks,fetchTasks,getTask,updateTask,updateTaskStatus, addTask, deleteTask, isLoading, error} = useTaskStore();
 
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editTitle, setEditTitle] = useState("")
@@ -19,11 +22,12 @@ function App() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [todoToDelete, setTodoToDelete] = useState<number | null>(null)
   const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null)
-console.log("tasttt", tasks)
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState<boolean>(false);
+
 
 const addTodo = async (data: TodoFormData) => { 
-  console.log("Adding todo with data:", data);   
-    try {
+
+  try {
       await addTask({
         title: data.title.trim(),
         description: data.description?.trim() || '',
@@ -33,6 +37,58 @@ const addTodo = async (data: TodoFormData) => {
       console.error("Erreur lors de l'ajout de la tâche:", error);
     }
 };
+
+  // Utilisation de TanStack Query pour récupérer les détails d'une tâche
+const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useQuery({
+    queryKey: ['task', selectedTodoId],
+    queryFn:async () =>{
+      try{
+         const data =await getTask(selectedTodoId as number )
+        console.log("dddd", data)
+        return data
+      }catch(err){
+        console.log(err)
+      }
+    },
+    enabled: !!selectedTodoId,
+    retry: false,
+});
+// const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useQuery({
+//     queryKey: ['task', selectedTodoId],
+//     queryFn: async () => {
+//       if (!selectedTodoId) {
+//         throw new Error('No task ID provided');
+//       }
+      
+//       try {
+//         const data = await getTask(selectedTodoId);
+//         if (!data) {
+//           throw new Error('Task not found');
+//         }
+//         return data; 
+//       } catch (error) {
+//         console.error('Error fetching task:', error);
+//         throw error; // Re-throw the error for proper error handling
+//       }
+//     },
+//     enabled: !!selectedTodoId,
+//     retry: false,
+// }
+// )
+// ;
+console.log("Selected Todo:", selectedTodo);
+console.log("Selected Todo ID:", selectedTodoId);
+
+
+
+  const handleTodoClick = (id: number) => {
+    setSelectedTodoId(id);
+    setIsDetailModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsDetailModalOpen(false);
+    setSelectedTodoId(null);
+  };
 
   useEffect(()=>{
     fetchTasks()
@@ -132,6 +188,7 @@ const toggleComplete = async (id: number) => {
           {/* Liste des todos */}
           <TaskList
             todos={tasks}
+            onTodoClick={handleTodoClick}
             editingId={editingId}
             editTitle={editTitle}
             setEditTitle={setEditTitle}
@@ -149,13 +206,15 @@ const toggleComplete = async (id: number) => {
 
 
           {/* Panneau de détails de la todo sélectionnée */}
-          {selectedTodoId && (
-            <TodoDetailPanel
-              selectedTodo={tasks?.find((t) => t.id === selectedTodoId)}
-              setSelectedTodoId={setSelectedTodoId}
-              formatDate={formatDate}
-            />
-          )}
+<TodoDetailModal
+  isOpen={isDetailModalOpen}
+  onClose={handleCloseModal}
+  selectedTodo={selectedTodo}
+  formatDate={formatDate}
+  isLoading={isLoadingTodo}
+  isError={isError}
+/>
+
 
           {/* Statistiques */}
         {tasks?.length > 0 && <TodoStats todos={tasks} />}

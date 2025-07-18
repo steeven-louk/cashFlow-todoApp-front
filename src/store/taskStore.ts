@@ -6,6 +6,7 @@ import type { Task, TaskState } from "../types/taskType";
 import { 
   fetchTasks, 
   addTask as addTaskService, 
+  getTask as getTaskService,
   deleteTask as deleteTaskService,
   updateTask as updateTaskService,
   updateTaskStatus as updateTaskStatusService 
@@ -30,6 +31,21 @@ export const useTaskStore = create<TaskState>((set) => ({
       set({ error: (error as Error).message, isLoading: false }); // Gestion des erreurs
     }
   },
+
+  // Fonction pour récupérer une tâche spécifique
+  getTask: async (id: number) => {
+  try {
+    set({error: null });
+    const task = await getTaskService(id); 
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    return task; 
+  } catch (error) {
+    set({ error: (error as Error).message });
+    throw error; 
+  } 
+},
 
   // Fonction pour ajouter une nouvelle tâche
   addTask: async (task:Omit<Task,'id'>) => {
