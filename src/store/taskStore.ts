@@ -70,9 +70,6 @@ export const useTaskStore = create<TaskState>((set) => ({
       set((state) => ({
         tasks: state.tasks.filter(task => task.id !== id),
         isLoading: false
-    //     tasks: Array.isArray(state.tasks)
-    // ? state.tasks.filter(task => task.id !== id)
-    // : [],
       }));
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });

@@ -4,7 +4,7 @@ import type { Task } from '../types/taskType';
 import TodoCard from './TodoCard';
 
 interface TaskListProps {
-  todos:[];
+  todos:Task[];
   onTodoClick: (id: number) => void;
   editingId: number | null;
   editTitle: string;

@@ -65,8 +65,17 @@ export const deleteTask = async (id:number) => {
 };
 
 export const updateTask = async (id:number, task:Task) => {
-    const response = await axios.put(`${API_URL}/${id}`, task);
-    return response.data;
+    try {
+        const response = await axios.put(`${API_URL}/${id}`, task);
+        console.log("Updated task:", response);
+        if(response.status === 200){
+            const {data} = response.data;
+            return data;
+        }
+    } catch (error) {
+        console.error(error?.response?.data.message || 'Erreur lors de la mise à jour de la tâche');
+        throw error;
+    }
 };
 
 export const updateTaskStatus = async (id:number, status:string) => {

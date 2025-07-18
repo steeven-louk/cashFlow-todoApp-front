@@ -3,15 +3,14 @@ import { IoAlertCircleOutline } from 'react-icons/io5'
 
 import TaskList from './components/TaskList'
 import TodoForm from './components/TodoForm'
-import TodoDetailPanel from './components/TodoDetailPanel'
+// import TodoDetailPanel from './components/TodoDetailPanel'
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog'
 import TodoStats from './components/TaskStats'
-// import type { Task } from './types/taskType'
 import { useTaskStore } from './store/taskStore'
 import type { TodoFormData } from './schemas/taskSchema'
 import { useQuery } from '@tanstack/react-query'
 import TodoDetailModal from './components/TodoDetailModal'
-// import { getTask } from './services/API/taskService'
+
 
 function App() {
   const {tasks,fetchTasks,getTask,updateTask,updateTaskStatus, addTask, deleteTask, isLoading, error} = useTaskStore();
