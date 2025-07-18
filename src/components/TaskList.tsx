@@ -2,19 +2,12 @@ import React from 'react';
 import type { Task } from '../types/taskType';
 import TodoCard from './TodoCard';
 
+
 interface TaskListProps {
   todos:Task[];
   onTodoClick: (id: number) => void;
-  editingId: number | null;
-  editTitle: string;
-  setEditTitle: (title: string) => void;
-  editDescription: string;
-  setEditDescription: (description: string) => void;
   selectedTodoId: number | null;
   toggleComplete: (id: number) => void;
-  startEditing: (id: number, title: string, description: string) => void;
-  saveEdit: () => void;
-  cancelEdit: () => void;
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
 }
@@ -22,19 +15,12 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({
   todos,
   onTodoClick,
-  editingId,
-  editTitle,
-  setEditTitle,
-  editDescription,
-  setEditDescription,
   selectedTodoId,
   toggleComplete,
-  startEditing,
-  saveEdit,
-  cancelEdit,
   openDeleteDialog,
   selectTodo,
 }) => {
+
 
   return (
     <div className="space-y-2 my-5">
@@ -47,16 +33,8 @@ const TaskList: React.FC<TaskListProps> = ({
           <TodoCard
             key={todo?.id}
             todo={todo}
-            editingId={editingId}
-            editTitle={editTitle}
-            setEditTitle={setEditTitle}
-            editDescription={editDescription}
-            setEditDescription={setEditDescription}
             selectedTodoId={selectedTodoId}
             toggleComplete={toggleComplete}
-            startEditing={startEditing}
-            saveEdit={saveEdit}
-            cancelEdit={cancelEdit}
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
             onClick={() => onTodoClick(todo.id)}

@@ -2,15 +2,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { todoSchema, type TodoFormData } from '../schemas/taskSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTodoActions } from '../hooks/useTodoActions';
 
-interface TodoFormProps {
-  addTodo: (data: TodoFormData) => void;
+// interface TodoFormProps {
+//   addTodo: (data: TodoFormData) => void;
 
-}
+// }
 
-const TodoForm: React.FC<TodoFormProps> = ({
-  addTodo,
-}) => {
+const TodoForm: React.FC = () => {
 
     const {
     register,
@@ -24,6 +23,8 @@ const TodoForm: React.FC<TodoFormProps> = ({
       description: ''
     }
   });
+
+  const { addTodo } = useTodoActions()
 
 
   const onSubmit = async(data: TodoFormData) => {

@@ -2,128 +2,49 @@ import TaskList from './components/TaskList'
 import TodoForm from './components/TodoForm'
 import DeleteConfirmationDialog from './components/DeleteConfirmationDialog'
 import TodoStats from './components/TaskStats'
-import type { TodoFormData } from './schemas/taskSchema'
+
 import TodoDetailModal from './components/TodoDetailModal'
 import { FaPenNib } from 'react-icons/fa'
 import { useTasks } from './hooks/useTasks'
-import { useState } from 'react'
 import { sortedTask } from './services/utils/sortedTask'
+import { useDeleteTodo } from './hooks/useDeleteTodo'
+import { useTaskDetail } from './hooks/useTaskDetail'
+import { useTodoActions } from './hooks/useTodoActions'
 
 
 function App() {
 
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [editTitle, setEditTitle] = useState("")
-  const [editDescription, setEditDescription] = useState("")
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [todoToDelete, setTodoToDelete] = useState<number | null>(null)
-  const [selectedTodoId, setSelectedTodoId] = useState<number | null>(null)
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState<boolean>(false);
 
     const {
     tasks,
     isLoading,
     error,
-    addTask,
-    updateStatus,
-    updateTask,
     deleteTask,
   } = useTasks();
 
+  const {   
+    deleteDialogOpen,
+    setDeleteDialogOpen,
+    openDeleteDialog,
+    cancelDelete,
+    confirmDelete} = useDeleteTodo(deleteTask);
+
+    const { 
+    selectedTodoId,
+    isDetailModalOpen,
+    handleTodoClick,
+    handleCloseModal,
+    selectTodo,
+    selectedTodo,
+    isLoadingTodo,
+    isError
+  } = useTaskDetail();
+
+  const { toggleComplete } = useTodoActions();
+
+
   // Utilisation de TanStack Query pour récupérer les détails d'une tâche
-const { data: selectedTodo, isLoading: isLoadingTodo, isError } = useTasks().useTask(selectedTodoId);
 
-  // Fonction pour ajouter une tâche
-  // Utilisation de TanStack Query pour ajouter une tâche
-const addTodo = async (data: TodoFormData) => { 
-
-  try {
-      await addTask(data);
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de la tâche:", error);
-    }
-};
-
-  // Fonction pour basculer le statut d'une tâche
-const toggleComplete = async (id: number) => {
-    const todo = tasks.find(t => t.id === id);
-    if (!todo) return;
-    const newStatus = todo.status === 'DONE' ? 'PENDING' : 'DONE';
-    await updateStatus({id, status:newStatus});
-};
-
-  // Fonction pour sauvegarder les modifications d'une tâche en cours d'édition
-  const saveEdit = async() => {
-    if (editTitle.trim() !== "" && editingId !== null) {
-      const existingTask = tasks.find(t => t.id === editingId);
-      if (!existingTask) return;
-      await updateTask({
-        id: editingId,
-        task: {
-          id: editingId,
-          title: editTitle.trim(),
-          description: editDescription.trim(),
-          status: "PENDING",
-          createdAt: existingTask.createdAt
-        }
-      });
-      setEditingId(null)
-      setEditTitle("")
-      setEditDescription("")
-    }
-  }
-
-  // Fonction pour confirmer la suppression d'une tâche
-    const confirmDelete =async () => {
-    if (todoToDelete !== null) {
-      await deleteTask(todoToDelete)
-      setDeleteDialogOpen(false)
-      setTodoToDelete(null)
-    }
-  }
-
-
-  const handleTodoClick = (id: number) => {
-    setSelectedTodoId(id);
-    setIsDetailModalOpen(true);
-  };
-  const handleCloseModal = () => {
-    setIsDetailModalOpen(false);
-    setSelectedTodoId(null);
-  };
-
-
-  const openDeleteDialog = (id: number) => {
-    setTodoToDelete(id)
-    setDeleteDialogOpen(true)
-  }
-
-
-
-  const cancelDelete = () => {
-    setDeleteDialogOpen(false)
-    setTodoToDelete(null)
-  }
-
-
-
-  const startEditing = (id: number, title: string, description: string) => {
-    setEditingId(id)
-    setEditTitle(title)
-    setEditDescription(description)
-  }
-
-
-
-  const cancelEdit = () => {
-    setEditingId(null)
-    setEditTitle("")
-    setEditDescription("")
-  }
-
-  const selectTodo = (id: number) => {
-    setSelectedTodoId(selectedTodoId === id ? null : id)
-  }
 
   return (
     <>
@@ -139,38 +60,30 @@ const toggleComplete = async (id: number) => {
           <h2 className='font-semibold text-xl'>Nouvelle tâche</h2>
 
           <TodoForm 
-              addTodo={addTodo}
+              // addTodo={addTodo}
           />
         </div>
           {/* Liste des todos */}
          { isLoading && <h2 className='text-xl animate-pulse'>Loading...</h2>}
-         {error && <h2>Error: {error}</h2>}
+         {error && <h2>Error: {error.message}</h2>}
           <TaskList
             todos={sortedTask(tasks)}
             onTodoClick={handleTodoClick}
-            editingId={editingId}
-            editTitle={editTitle}
-            setEditTitle={setEditTitle}
-            editDescription={editDescription}
-            setEditDescription={setEditDescription}
             selectedTodoId={selectedTodoId}
             toggleComplete={toggleComplete}
-            startEditing={startEditing}
-            saveEdit={saveEdit}
-            cancelEdit={cancelEdit}
             openDeleteDialog={openDeleteDialog}
             selectTodo={selectTodo}
             />
 
 
           {/* Panneau de détails de la todo sélectionnée */}
-        <TodoDetailModal
-          isOpen={isDetailModalOpen}
-          onClose={handleCloseModal}
-          selectedTodo={selectedTodo}
-          isLoading={isLoadingTodo}
-          isError={isError}
-        />
+      <TodoDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={handleCloseModal}
+        selectedTodo={selectedTodo}
+        isLoading={isLoadingTodo}
+        isError={isError}
+      />
           {/* Statistiques */}
         {tasks?.length > 0 && <TodoStats todos={tasks} />}
       </div>

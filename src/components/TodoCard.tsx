@@ -4,19 +4,13 @@ import { FaCheckSquare, FaEdit, FaTrash } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
 import type { Task } from '../types/taskType';
 import { formatDate } from '../services/utils/formatedDate';
+import { useTasks } from '../hooks/useTasks';
+import { useEditTodo } from '../hooks/useEditTodo';
 
 interface TodoItemProps {
   todo: Task;
-  editingId: number | null;
-  editTitle: string;
-  setEditTitle: (title: string) => void;
-  editDescription: string;
-  setEditDescription: (description: string) => void;
   selectedTodoId: number | null;
   toggleComplete: (id: number) => void;
-  startEditing: (id: number, title: string, description: string) => void;
-  saveEdit: () => void;
-  cancelEdit: () => void;
   openDeleteDialog: (id: number) => void;
   selectTodo: (id: number) => void;
   onClick: () => void;
@@ -24,19 +18,24 @@ interface TodoItemProps {
 
 const TodoCard: React.FC<TodoItemProps> = ({
   todo,
-  editingId,
-  editTitle,
-  setEditTitle,
-  editDescription,
-  setEditDescription,
   selectedTodoId,
   toggleComplete,
-  startEditing,
-  saveEdit,
-  cancelEdit,
   openDeleteDialog,
   onClick
 }) => {
+
+   const {updateTask} = useTasks();
+      const {
+      editingId,
+      editTitle,
+      editDescription,
+      setEditTitle,
+      setEditDescription,
+      startEditing,
+      cancelEdit,
+      saveEdit
+      } = useEditTodo(updateTask);
+
 const cardClass = `
   flex items-center gap-3 p-3 rounded-lg border hover:shadow-md transition-colors cursor-pointer
   ${selectedTodoId === todo.id 
@@ -115,7 +114,7 @@ return (
       <div className="flex gap-2 z-40">
         {editingId === todo.id ? (
           <>
-            <button className='cursor-pointer' type="button" onClick={saveEdit} disabled={!editTitle.trim()}>
+            <button className='cursor-pointer' type="button" onClick={()=>saveEdit} disabled={!editTitle.trim()}>
               <FaCheckSquare className='w-6 h-6 transition-colors text-green-600 hover:text-green-500 cursor-pointer disabled:text-gray-400'/>
             </button>
             <button className='cursor-pointer' type="button" onClick={cancelEdit}>
