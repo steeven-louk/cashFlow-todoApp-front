@@ -2,7 +2,6 @@ import React from 'react';
 import type { Task } from '../types/taskType';
 import TodoCard from './TodoCard';
 
-// https://github.com/steeven-louk/cashFlow-todoApp-server.git
 interface TaskListProps {
   todos:Task[];
   onTodoClick: (id: number) => void;
