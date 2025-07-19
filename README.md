@@ -58,6 +58,7 @@ src/
 ├── App.tsx
 └── main.tsx
 
+
 ## 📥 Installation
 
 Suivez ces étapes pour configurer le projet localement :
