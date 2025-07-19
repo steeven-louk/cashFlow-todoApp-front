@@ -12,7 +12,6 @@ import { useDeleteTodo } from './hooks/useDeleteTodo'
 import { useTaskDetail } from './hooks/useTaskDetail'
 import { useTodoActions } from './hooks/useTodoActions'
 
-
 function App() {
 
     const {

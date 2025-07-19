@@ -6,14 +6,21 @@ Elle permet d'ajouter, éditer, supprimer, consulter et marquer comme complètes
 
 ## 🚀 Fonctionnalités
 
--   Ajouter de nouvelles tâches (titre, description)
--   Marquer une tâche comme terminée ou non terminée
--   Éditer une tâche existante
--   Supprimer une tâche avec confirmation
--   Voir les détails d'une tâche via une fenêtre modale
--   Statistiques sur les tâches terminées / en cours
--   Chargement et gestion des erreurs via TanStack Query
--   Composants découpés et logique métier bien séparée
+✅ Ajouter de nouvelles tâches (titre, description)
+
+✅ Marquer une tâche comme terminée / non terminée
+
+✅ Éditer une tâche existante
+
+✅ Supprimer une tâche avec confirmation
+
+✅ Voir les détails d'une tâche via une modale
+
+✅ Statistiques (tâches terminées / en cours)
+
+✅ Gestion des erreurs et états de chargement avec **TanStack Query**
+
+✅ Architecture claire et découplée
 
 ## 🛠️ Stack Technique
 
@@ -22,12 +29,12 @@ Elle permet d'ajouter, éditer, supprimer, consulter et marquer comme complètes
 -   **TanStack Query**
 -   **Zustand** (gestion d'etat)
 -   **Zod** (validation des formulaires)
--   **Tailwind CSS** (design)
+-   **Tailwind CSS** (design/UI)
 -   **React Icons**
--   **React-toastify**
+-   **React-toastify** (notification)
 
 ## 📂 Structure du Projet
-
+```
 src/
 ├── components/
 │   ├── DeleteConfirmationDialog.tsx
@@ -57,17 +64,18 @@ src/
 │   └── taskType.ts
 ├── App.tsx
 └── main.tsx
+```
 
 ## 📥 Installation
 
 Suivez ces étapes pour configurer le projet localement :
 ## Clone le dépôt
 ```
-git clone <url-du-depot>
+git clone https://github.com/steeven-louk/cashFlow-todoApp-front.git
 ```
 ## Va dans le dossier
 ```
-cd gestion-taches-react
+cd cashFlow-todoApp-front
 ```
 ## Installe les dépendances
 ```

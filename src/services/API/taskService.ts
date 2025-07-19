@@ -3,7 +3,7 @@ import type { Task } from '../../types/taskType';
 import { toast } from 'react-toastify';
 import { handleApiError } from '../utils/errrorHandler';
 
-const API_URL = 'http://localhost:3000/api/tasks';
+const API_URL = process.env.SERVER_URL || 'http://localhost:3000/api/tasks';
 
 // Fonction pour récupérer toutes les tâches
 export const fetchTasks = async () => {
