@@ -66,6 +66,7 @@ src/
 └── main.tsx
 ```
 
+
 ## 📥 Installation
 
 Suivez ces étapes pour configurer le projet localement :
