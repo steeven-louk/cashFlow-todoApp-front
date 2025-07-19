@@ -1,69 +1,111 @@
-# React + TypeScript + Vite
+# 📝 Gestion des Tâches - Équipe Interne
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Une application simple de gestion des tâches construite avec React, TypeScript, Zustand, TanStack Query et Zod.
 
-Currently, two official plugins are available:
+Elle permet d'ajouter, éditer, supprimer, consulter et marquer comme complètes des tâches pour une gestion d'équipe interne.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Fonctionnalités
 
-## Expanding the ESLint configuration
+-   Ajouter de nouvelles tâches (titre, description)
+-   Marquer une tâche comme terminée ou non terminée
+-   Éditer une tâche existante
+-   Supprimer une tâche avec confirmation
+-   Voir les détails d'une tâche via une fenêtre modale
+-   Statistiques sur les tâches terminées / en cours
+-   Chargement et gestion des erreurs via TanStack Query
+-   Composants découpés et logique métier bien séparée
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Stack Technique
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+-   **React**
+-   **TypeScript**
+-   **TanStack Query**
+-   **Zustand** (gestion d'etat)
+-   **Zod** (validation des formulaires)
+-   **Tailwind CSS** (design)
+-   **React Icons**
+-   **React-toastify**
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 📂 Structure du Projet
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+src/
+├── components/
+│   ├── DeleteConfirmationDialog.tsx
+│   ├── TaskList.tsx
+│   ├── TaskStats.tsx
+│   ├── TodoDetailModal.tsx
+│   ├── TodoDetailPanel.tsx
+│   └── TodoForm.tsx
+├── hooks/
+│   ├── useTasks.ts
+│   ├── useDeleteTodo.tsx
+│   ├── useEditTodo.tsx
+│   ├── useTaskDetail.tsx
+│   └── useTodoActions.tsx
+├── schemas/
+│   └── taskSchema.ts
+├── services/
+│   ├── utils/
+│   │   ├── errorHandler.ts
+│   │   ├── formatedDate.ts
+│   │   └── sortedTask.ts
+│   └── API/
+│       └── taskService.ts
+├── store/
+│   └── taskStore.ts
+├── types/
+│   └── taskType.ts
+├── App.tsx
+└── main.tsx
+
+## 📥 Installation
+
+Suivez ces étapes pour configurer le projet localement :
+## Clone le dépôt
+```
+git clone <url-du-depot>
+```
+## Va dans le dossier
+```
+cd gestion-taches-react
+```
+## Installe les dépendances
+```
+npm install
+```
+## ▶️ Lancer le projet en développement
+```
+npm run dev
+```
+L'application sera accessible à `http://localhost:5173`.
+
+## ✅ Commandes utiles
+```
+  # Lancer le projet
+  npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📸 Aperçu de l'application
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+![Aperçu de l'application](./src/assets/demo.png)
+
+## ✨ Points intéressants du projet
+
+-   Séparation claire des responsabilités : hooks, services, components
+-   Bonne gestion d'état via TanStack Query
+-   Utilisation de schémas Zod pour valider les données côté client
+-   Gestion des erreurs et loading states proprement
+-   Code clair et maintenable
+
+## 💡 Améliorations possibles
+
+-   Authentification utilisateur
+-   Persistance via une BDD (PostgreSQL, MongoDB...)
+-   Filtres de recherche plus avancés
+-   Drag & Drop pour organiser les tâches
+-   Tests unitaires (Vitest, React Testing Library)
+
+## 👨‍💻 Auteur
+
+Développé par \[Steeven-louk\]
